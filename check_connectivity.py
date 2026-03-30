@@ -13,10 +13,16 @@ from dataclasses import dataclass, field
 from typing import Optional
 
 import requests
-from colorama import init, Fore, Style
 
-# Initialize colorama for cross-platform color support
-init(autoreset=True)
+try:
+    from colorama import init, Fore, Style
+    init(autoreset=True)
+except ImportError:
+    # Graceful fallback — run without colors if colorama is unavailable
+    class _NoColor:
+        def __getattr__(self, _):
+            return ""
+    Fore = Style = _NoColor()
 
 TIMEOUT_SECONDS = 10
 MAX_WORKERS = 10
